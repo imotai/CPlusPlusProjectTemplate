@@ -1,0 +1,19 @@
+syntax="proto2";
+
+package cpluscplustemplate;
+option cc_generic_services = true;
+
+message ParseSQLRequest {
+    optional string sql = 1;
+}
+
+message ParseSQLResponse {
+    optional string ast = 1;
+}
+
+
+
+service ParseSQLServer {
+    rpc ParseSQL(ParseSQLRequest) returns(ParseSQLResponse);
+
+}
