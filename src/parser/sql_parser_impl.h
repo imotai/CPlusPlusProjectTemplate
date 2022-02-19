@@ -27,15 +27,15 @@ using ::google::protobuf::RpcController;
 namespace cpluscplustemplate {
 
 
-class ParseSQLServerImpl :: public ParserSQLServer {
+class ParseSQLServerImpl : public ParseSQLServer {
 
  public:
     ParseSQLServerImpl() {}
     ~ParseSQLServerImpl() {}
 
     void ParseSQL(RpcController* ctrl,
-            const ParserSQLRequest* request,
-            ParserSQLResponse* response,
+            const ParseSQLRequest* request,
+            ParseSQLResponse* response,
             Closure* done);
 };
 

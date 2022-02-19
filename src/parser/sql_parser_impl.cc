@@ -16,8 +16,11 @@
 // limitations under the License.
 //
 
+#include <memory>
 #include "parser/sql_parser_impl.h"
 #include "zetasql/parser/parser.h"
+#include "zetasql/public/error_helpers.h"
+#include "zetasql/public/error_location.pb.h"
 #include "absl/status/status.h"
 #include "absl/strings/string_view.h"
 
@@ -25,15 +28,16 @@
 namespace cpluscplustemplate {
 
 void ParseSQLServerImpl::ParseSQL(RpcController* ctrl,
-        const ParserSQLRequest* request,
-        ParserSQLResponse* reponse,
+        const ParseSQLRequest* request,
+        ParseSQLResponse* response,
         Closure* done) {
-    absl::string_view sql(request->sql().c_str(), request->sql().size());
-    zetasql::ParseOptions opt;
-    std::unique_ptr<zetasql::ParseOutput> output;
-    auto status = zetasql::ParseStatement(sql, opt, &output);
+    ::zetasql::ParserOptions opt;
+    std::unique_ptr<::zetasql::ParserOutput> output;
+
+    auto status = ::zetasql::ParseScript(request->sql(), opt,
+                  ::zetasql::ERROR_MESSAGE_MULTI_LINE_WITH_CARET, &output);
     if (status.ok()) {
-        response->set_ast(output->statement()->DebugString());
+        response->set_ast(output->script()->DebugString());
     }else {
         response->set_ast(status.ToString());
     }

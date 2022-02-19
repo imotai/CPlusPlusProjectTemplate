@@ -24,29 +24,31 @@
 #include "proto/sql_parser.pb.h"
 #include "glog/logging.h"
 #include "brpc/channel.h"
+#include "brpc/server.h"
 
-DEFINE_uint32(port, "Set the port of parser server");
-DEFINE_string(role, "Set the role of process, server or cmd");
-DEFINE_string(sql, "Set sql to parse");
+DEFINE_uint32(port, 9527, "Set the port of parser server");
+DEFINE_string(role, "server", "Set the role of process, server or cmd");
+DEFINE_string(sql, "select * from t1", "Set sql to parse");
 
 void StartParserServer() {
-    cpluscplustemplate::ParseSQLServerImpl service = new cpluscplustemplate::ParseSQLServerImpl();
+    auto service = new cpluscplustemplate::ParseSQLServerImpl();
     brpc::ServerOptions options;
     brpc::Server server;
     if (server.AddService(service, brpc::SERVER_DOESNT_OWN_SERVICE) != 0) {
         exit(1);
     }
-    std::string endpoint = "127.0.0.1:" + FLAGS_port;
+
+    std::string endpoint = "127.0.0.1:" + std::to_string(FLAGS_port);
     if (server.Start(endpoint.c_str(), &options) != 0) {
         exit(1);
     }
-    std::cout << "start parse server on port " << FLAGS_port << std::endl;
+    LOG(INFO) << "start parse server on  " << endpoint << std::endl;
     server.RunUntilAskedToQuit();
 }
 
 int ParseSQL() {
 	brpc::Channel channel;
-    std::string endpoint = "127.0.0.1:" + FLAGS_port;
+    std::string endpoint = "127.0.0.1:" + std::to_string(FLAGS_port);
     // Initialize the channel, NULL means using default options.
     brpc::ChannelOptions options;
     if (channel.Init(endpoint.c_str(), "", &options) != 0) {

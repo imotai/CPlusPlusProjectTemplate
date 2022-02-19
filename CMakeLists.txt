@@ -1,4 +1,3 @@
-
 cmake_minimum_required(VERSION 3.13)
 
 if (POLICY CMP0068)
@@ -17,7 +16,10 @@ project(CPlusPlusProjectTemplate)
 
 add_definitions('-g')
 add_definitions('-Wall')
-add_definitions('-std=c++11')
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if (CMAKE_BUILD_TYPE STREQUAL "")
     set(CMAKE_BUILD_TYPE RelWithDebInfo)
@@ -28,7 +30,9 @@ set(CPlusPlusProjectTemplate_VERSION_MINOR 0)
 set(CPlusPlusProjectTemplate_VERSION_BUG 0)
 if (NOT DEFINED CMAKE_PREFIX_PATH)
     set(CMAKE_PREFIX_PATH /depends/thirdparty)
+    LINK_DIRECTORIES(/depends/thirdparty/lib /depends/thirdparty/lib64)
 endif()
+
 include_directories(${CMAKE_PREFIX_PATH}/include)
 function(get_commitid CODE_DIR COMMIT_ID)
     find_package(Git REQUIRED)
@@ -47,5 +51,4 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/src/version.h.in"
   "${PROJECT_SOURCE_DIR}/src/version.h"
 )
-
 add_subdirectory(src)
