@@ -25,8 +25,7 @@ cd /tpl/build
 # start parse rpc server
 src/cmd/parser_demo >/dev/null 2>&1 &
 
-# parse sql
-
+# send a request to rpc server and get the sql ast
 src/cmd/parser_demo --sql="select * from t1" --role=cmd
 Script [0-16]
   StatementList [0-16]
